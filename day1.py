@@ -17,6 +17,3 @@ with open("inputs/day1.txt", "r") as file:
                 break
         if done:
             break
-
-
-    
