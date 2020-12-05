@@ -7,16 +7,15 @@ with open('inputs/day5.txt', 'r') as file:
     high = 0
     seats = set()
     for line in file:
-        line = line.strip()
         row = to_bin(line[:7], 'F', 'B')
-        col = to_bin(line[-3:], 'L', 'R')
-        seat_num = (row * 8) + col
-        seats.add(seat_num)
-        high = max(high, seat_num)
+        col = to_bin(line[-4:], 'L', 'R') # account for \n
+        seats.add((row * 8) + col)
     
-    print(high)
-    prev_i = 0.5
+    print(f"The largest seat number is {max(seats)}")
+
+    prev_i = 0
     for i in seats:
         if i - prev_i == 2:
-            print(i-1)
+            print(f"Your seat number is {i-1}")
+            break
         prev_i = i
