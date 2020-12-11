@@ -11,12 +11,12 @@ def enable_print():
 
 total_time = 0
 
-files = [(f, open(f).read()) for f in glob.glob('day?.py')]
+files = [(f, open(f).read()) for f in glob.glob('day*.py')]
 
 for f_name, f in files:
     block_print()
     start = time.perf_counter()
-    exec(f)
+    exec(f, {}) # given no access to scope
     stop = time.perf_counter()
     enable_print()
 
