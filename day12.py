@@ -20,21 +20,6 @@ def solve(directions, is_part_1):
     curr_x = 0
     curr_y = 0
 
-    # sin(degree)
-    sin = {
-        0   : 0,
-        90  : 1,
-        180 : 0,
-        270 : -1
-    }
-
-    cos = {
-        0   : 1,
-        90  : 0,
-        180 : -1,
-        270 : 0
-    }
-
     def rotate(degrees):
         if is_part_1:
             nonlocal curr_dir
@@ -42,12 +27,9 @@ def solve(directions, is_part_1):
         else:
             nonlocal x, y
             degrees %= 360
-            cosdeg = cos[degrees]
-            sindeg = sin[degrees]
-            print(f"cos: {cosdeg} sin: {sindeg}")
-            new_x = x * cosdeg - y * sindeg
-            new_y = x * sindeg - y * cosdeg
-            x, y = new_x, new_y
+            times = degrees // 90
+            for _ in range(times):
+                x, y = -y, x
         
     def north(i):
         nonlocal y
@@ -98,11 +80,6 @@ def solve(directions, is_part_1):
     
     for action, dist in directions:
         action_map[action](dist)
-        if not is_part_1:
-            print(f"action is {action}, dist is {dist}")
-            print(f"ship is at {curr_x, curr_y}")
-            print(f"waypoint is {x, y}")
-            print()
 
     if is_part_1:
         curr_x, curr_y = x, y
