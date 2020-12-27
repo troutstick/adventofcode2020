@@ -1,31 +1,44 @@
 import re
-from typing import Generator
 
-def process_fields(string):
-    s = set()
-    p = re.compile('[\d]+-[\d]+ or [\d]+-[\d]+')
-    ranges = p.findall(string)
-    p = re.compile('[\d]+')
-    for r in ranges:
+p = re.compile('[\d]+')
+
+def process_fields(string: str):
+    D = {}
+    fields = [s.split(':') for s in string.splitlines()]
+
+    # p = re.compile('[\d]+-[\d]+ or [\d]+-[\d]+')
+    # ranges = p.findall(string)
+    for name, r in fields:
         a,b,c,d = [int(i) for i in p.findall(r)]
-        f = lambda x: (x >= a and x <= b) or (x >= c and x <= d)
-        s.add(f)
-    return s
+
+        def f(x, a=a, b=b, c=c, d=d): 
+            return (x >= a and x <= b) or (x >= c and x <= d)
+        
+        D[f] = name
+    return D
 
 
-with open('inputs/day16test.txt') as f:
-    instructions = f.read().split('\n\n')
-    p = re.compile('[\d]+')
-    nearby_vals = [int(i) for i in p.findall(instructions[2])]
-    field_set = process_fields(instructions[0])
+with open('inputs/day16.txt') as f:
+    ins = f.read().split('\n\n')
+    tickets = [[int(i) for i in p.findall(line)] for line in ins[2].splitlines()]
+    flat_tickets = [item for sublist in tickets for item in sublist]
+    field_dict = process_fields(ins[0])
 
 def in_no_fields(i):
-    for f in field_set:
+    for f in field_dict:
         if f(i):
-            print(f"{i} has a field")
             return False
-    print(f"{i} is fieldless")
     return True
 
-error_rate = sum(filter(in_no_fields, nearby_vals))
+def valid_ticket(t):
+    for i in t:
+        if in_no_fields(i):
+            return False
+    return True
+
+error_rate = sum(filter(in_no_fields, flat_tickets))
 print(f"The answer to part 1 is {error_rate}")
+
+valid_tickets = [t for t in filter(valid_ticket, tickets)]
+for f, name in field_dict.items():
+    
