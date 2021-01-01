@@ -24,18 +24,6 @@ def neighbor_set_4d(coord):
             )
         )
 
-def next_state(next, to_convert, activate_condition, active, neighbors):
-    def num_active_neighbors(pos):
-        return reduce(add, map(lambda p: p in active, neighbors[pos]))
-    
-    return next.union(
-        set(filter(
-                lambda pos: activate_condition(num_active_neighbors(pos)),
-                to_convert
-            )
-        )
-    )
-
 def solve(is_4d, lines):
 
     def initial_active(n):
@@ -48,12 +36,17 @@ def solve(is_4d, lines):
 
     active = set(filter(initial_active, starter_coords))
     for _ in range(6):
-        next_active = set()
         neighbors = {pos:neighbor_set(pos) for pos in active}
-        all_neighbors = reduce(set.union, neighbors.values())
-        neighbors.update({pos:neighbor_set(pos) for pos in all_neighbors})
-        next_active = next_state(next_active, active, lambda n: n == 2 or n == 3, active, neighbors)
-        active = next_state(next_active, all_neighbors, lambda n: n == 3, active, neighbors)
+        neighbors_of_active = reduce(set.union, neighbors.values())
+        neighbors.update({pos:neighbor_set(pos) for pos in neighbors_of_active})
+
+        def next_state(candidates, activate_func):
+            num_active_neighbors = lambda pos: reduce(add, map(lambda p: p in active, neighbors[pos]))
+            has_enough_neighbors = lambda pos: activate_func(num_active_neighbors(pos))
+            return set(filter(has_enough_neighbors, candidates))
+
+        active = next_state(active, lambda n: n == 2 or n == 3).union(next_state(neighbors_of_active, lambda n: n == 3))
+        
     return len(active)
 
 with open('inputs/day17.txt', 'r') as f:
