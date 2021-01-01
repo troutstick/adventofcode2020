@@ -24,17 +24,7 @@ def neighbor_set_4d(coord):
             )
         )
 
-def solve(is_4d, lines):
-
-    def initial_active(n):
-        return lines[n[0]][n[1]] == '#'
-
-    neighbor_set = neighbor_set_4d if is_4d else neighbor_set_3d
-    starter_coords = [(x,y,0) for x in range(len(lines)) for y in range(len(lines[0]))]
-    if is_4d:
-        starter_coords = [(x,y,z,0) for x,y,z in starter_coords]
-
-    active = set(filter(initial_active, starter_coords))
+def solve(active, neighbor_set):
     for _ in range(6):
         neighbors = {pos:neighbor_set(pos) for pos in active}
         neighbors_of_active = reduce(set.union, neighbors.values())
@@ -46,10 +36,13 @@ def solve(is_4d, lines):
             return set(filter(has_enough_neighbors, candidates))
 
         active = next_state(active, lambda n: n == 2 or n == 3).union(next_state(neighbors_of_active, lambda n: n == 3))
-        
+
     return len(active)
 
 with open('inputs/day17.txt', 'r') as f:
     lines = [line.strip() for line in f]
-    print(f"The answer to part 1 is {solve(False, lines)}")
-    print(f"The answer to part 2 is {solve(True, lines)}")
+    starter_coords = [(x,y,0) for x in range(len(lines)) for y in range(len(lines[0]))]
+    starter_4d = [(x,y,z,0) for x, y, z in starter_coords]
+    is_active = lambda n: lines[n[0]][n[1]] == '#'
+    print(f"The answer to part 1 is {solve(set(filter(is_active, starter_coords)), neighbor_set_3d)}")
+    print(f"The answer to part 2 is {solve(set(filter(is_active, starter_4d)), neighbor_set_4d)}")
