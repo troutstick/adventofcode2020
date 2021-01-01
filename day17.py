@@ -5,20 +5,33 @@ with open('inputs/day17.txt', 'r') as f:
     lines = [line.strip() for line in f]
 
 def neighbor_set(coord):
-    neighbors = set()
     X, Y, Z = coord
-    for x in range(X-1, X+2):
-        for y in range(Y-1, Y+2):
-            for z in range(Z-1, Z+2):
-                n = (x, y, z)
-                if n != coord:
-                    neighbors.add(n)
-    return neighbors
+    return set(
+            filter(
+                lambda n: n != coord, 
+                [(x,y,z)
+                for x in range(X-1, X+2) 
+                for y in range(Y-1, Y+2) 
+                for z in range(Z-1, Z+2)]
+            )
+        )
+
+def neighbor_set_4d(coord):
+    X, Y, Z, W = coord
+    return set(
+            filter(
+                lambda n: n != coord, 
+                [(x,y,z,w)
+                for x in range(X-1, X+2) 
+                for y in range(Y-1, Y+2) 
+                for z in range(Z-1, Z+2) 
+                for w in range(W-1, W+2)]
+            )
+        )
 
 active = set()
 for x in range(len(lines)):
     for y in range(len(lines[0])):
-        # if active
         if lines[x][y] == '#':
             active.add((x,y,0))
 
