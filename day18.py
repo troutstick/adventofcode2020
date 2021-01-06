@@ -1,7 +1,7 @@
 from functools import reduce
 from operator import add, mul
 
-operators = {'*':mul,'+':add}
+ops = {'*':mul,'+':add}
 
 def parse(add_before_mul):
     def left_has_precedence(l_op, r_op):
@@ -15,15 +15,15 @@ def parse(add_before_mul):
             except ValueError:
                 if c == '(':
                     stack.append(c)
-                elif c in operators:
-                    while stack and stack[-1] in operators and left_has_precedence(stack[-1], c):
+                elif c in ops:
+                    while stack and stack[-1] in ops and left_has_precedence(stack[-1], c):
                         rpn.append(stack.pop())
                     stack.append(c)
                 else: # c is ')'
                     stack_top = stack.pop()
                     while stack_top != '(':
                         rpn.append(stack_top)
-                        stack_top = stack.pop()
+                        stack_top = stack.pop() # discard '('
         stack.reverse()
         rpn.extend(stack)
         return rpn
@@ -31,13 +31,8 @@ def parse(add_before_mul):
     return shunting_yard
 
 def eval(rpn):
-    stack = []
-    for c in rpn:
-        if c in operators:
-            stack.append(operators[c](stack.pop(), stack.pop()))
-        else:
-            stack.append(c)
-    return stack[0]
+    rpn_operate = lambda stack, c: stack + [ops[c](stack.pop(), stack.pop()) if c in ops else c]
+    return reduce(rpn_operate, rpn, [])[0]
 
 def remove_whitespace(string):
     return ''.join(string.split())
