@@ -1,9 +1,10 @@
 SRC=cpp
-FILES=$(SRC)/main.cpp $(SRC)/day1.cpp
+FILES=$(SRC)/*.cpp
+OBJ=*.o
 
 
 
 aoc_cpp : $(FILES)
 	g++ -c $(FILES)
-	g++ -o target/aoc2020.out main.o day1.o
+	g++ -o target/aoc2020.out $(OBJ)
 	./target/aoc2020.out

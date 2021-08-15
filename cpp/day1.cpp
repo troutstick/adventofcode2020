@@ -2,14 +2,10 @@
 
 using namespace std;
 
-int day1(const string &path) {
-    ifstream file;
-    file.open(path);
-
-    string str;
+void day1(vector<string> *strs) {
     vector<int> nums;
     unordered_set<int> numset;
-    while (getline(file, str)) {
+    for (string str : *strs) {
         int n = stoi(str);
         nums.push_back(n);
     }
@@ -36,10 +32,8 @@ int day1(const string &path) {
                 cout << nums[i] << " " << nums[j] << " " << target << endl;
                 cout << "The product: ";
                 cout << nums[i] * nums[j] * target << endl;
-                return 0;
+                return;
             }
         }
     }
-    file.close();
-    return 0;
 }

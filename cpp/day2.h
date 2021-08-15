@@ -7,4 +7,4 @@
 
 using namespace std;
 
-void day1(vector<string> *strs);
+void day2(vector<string> *strs);
