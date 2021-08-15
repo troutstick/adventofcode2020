@@ -12,4 +12,7 @@ using namespace std;
 const string INPUT_PATH = "./inputs/";
 
 int main();
-vector<string> *readlines(const string &);
+void readlines(
+    const string &filename,
+    void (*solver) (vector<string> *)
+    );

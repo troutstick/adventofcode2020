@@ -1,13 +1,18 @@
 #include "main.h"
 
 int main() {
-    day1(readlines("day1.txt"));
-    day2(readlines("day2.txt"));
+
+    readlines("day1.txt", day1);
+    readlines("day2.txt", day2);
+
     return 0;
 }
 
-/* Return a heap allocated string. */
-vector<string> *readlines(const string &filename) {
+/**
+ * Read a file and call a
+ * specified solver function on it.
+ */
+void readlines(const string &filename, void (*solver) (vector<string> *)) {
     ifstream file;
     file.open(INPUT_PATH + filename);
 
@@ -18,5 +23,7 @@ vector<string> *readlines(const string &filename) {
     }
     file.close();
 
-    return strs;
+    solver(strs);
+
+    delete strs;
 }
