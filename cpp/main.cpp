@@ -4,6 +4,7 @@ int main() {
 
     readlines("day1.txt", day1);
     readlines("day2.txt", day2);
+    readlines("day3.txt", day3);
 
     return 0;
 }
